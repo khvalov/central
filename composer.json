@@ -1,0 +1,24 @@
+{
+  "name": "khvalov/central",
+  "type": "library",
+  "version": "1.0.0-dev",
+  "description": "PHP client for Centrifugo real-time messaging server (Adobted for v2) ",
+  "keywords": ["centrifugo", "real-time"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "V Kh",
+      "email": "khvalov.valery@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "ext-curl": "*",
+    "khvalov/php-centrifugo":"*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Central\\": "src/Central"
+    }
+  }
+}
