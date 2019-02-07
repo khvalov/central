@@ -1,11 +1,8 @@
 <?php
 namespace Central;
 
-use CentralException
-/**
- * Class Centrifugo
- * @package Centrifugo
- */
+use CentralException;
+
 class Message
 {
     
@@ -18,9 +15,12 @@ class Message
 
 
 
-    public function __construct(array $to)
+    public function __construct(array $settings=[])
     {
-        $this->to = $endpoint;
+		if(array_key_exists('to',$settings) && array_key_exists('body',$settings)){
+			$this->setTo($settings['to']);
+			$this->setBody($settings['body']);
+		}
        
     }
 	
