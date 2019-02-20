@@ -13,8 +13,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "ext-curl": "*",
-    "khvalov/php-centrifugo":"*"
+    "yiisoft/yii2-httpclient": "~2.0.0"
   },
   "autoload": {
     "psr-4": {

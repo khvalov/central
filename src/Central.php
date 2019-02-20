@@ -1,25 +1,30 @@
 <?php
 namespace Central;
 
-use Message;
-use CentralException;
-use Centrifugo\Centrifugo;
-use Centrifugo\Clients\HttpClient;
+use Central\Message;
+use Central\CentralException;
+use yii\httpclient\Client;
+
 
 Class Central {
 
 	private $message;
-	private $centrifugo;
+	private $httpClient;
+	private $endpoint;
+	private $apikey;
 	
 	public function __construct($endpoint,$apikey){
-		$this->centrifugo = new Centrifugo($endpoint, $apikey, new HttpClient());
+		$this->endpoint=$endpoint;
+		$this->apikey=$apikey;
+
+		$this->httpClient = new Client(['baseUrl' => $endpoint]);
 	}
 
-	public function setMesasge($message Message){
+	public function setMessage(Message $message){
 		$this->message=$message;
 	}
 	
-	public function getMessage(){
+	private function getMessage(){
 		return $this->message;
 	}
 	
@@ -39,11 +44,31 @@ Class Central {
 	}
 	
 
-	public function publish($message Message){
+	public function publish($message=null){
 		
-		$this->setMessage($message);
+		if(!empty($message) && $message instanceOf Message){
+			$this->setMessage($message);
+		}
+		try{
+			$data=[
+					"method"=>"publish",
+					    "params"=> [
+					        "channel": $this->getRcpt(), 
+					        "data"=>$this->message->getMessage()
+					    ]
+					];
+
+			$response = $this->httpClient->createRequest()
+						    ->setMethod('POST')
+						    ->setFormat(Client::FORMAT_JSON)
+						    ->addHeaders(['X-Api-Key' => $this->apikey])
+						    ->setData($data)
+						    ->send();
 		
-		$this->centrifugo->publish($this->getRcpt(),$this->getMessage);
+		} catch (exception $e) {
+			
+			throw new CentralException($e->getMessage);
+		}
 	}
 	
 }
